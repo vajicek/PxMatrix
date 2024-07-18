@@ -755,7 +755,7 @@ inline void PxMATRIX::fillMatrixBuffer(int16_t x, int16_t y, uint8_t r, uint8_t 
   if (_scan_pattern==WZAGZIG || _scan_pattern==VZAG || _scan_pattern==WZAGZIG2)
   {
     // get block coordinates and constraints
-    uint8_t rows_per_buffer = _height/2;  // 16
+    uint8_t rows_per_buffer = _height/2;
     uint8_t rows_per_block = rows_per_buffer/2;
     // this is a defining characteristic of WZAGZIG and VZAG:
     // two byte alternating chunks bottom up for WZAGZIG
@@ -767,7 +767,7 @@ inline void PxMATRIX::fillMatrixBuffer(int16_t x, int16_t y, uint8_t r, uint8_t 
     // strip down to single panel coordinates, restored later using panel_index
     x = x%panel_width;
     uint8_t base_y_offset = y/rows_per_buffer;
-    uint8_t buffer_y = y%rows_per_buffer; // 0 1
+    uint8_t buffer_y = y%rows_per_buffer;
     uint8_t block_x = x/cols_per_block;
     uint8_t block_x_mod = x%cols_per_block;
     uint8_t block_y = buffer_y/rows_per_block; // can only be 0/1 for height/pattern=4
@@ -776,7 +776,7 @@ inline void PxMATRIX::fillMatrixBuffer(int16_t x, int16_t y, uint8_t r, uint8_t 
     // translate block address to new block address
     // invert block_y so remaining translation will be more sane
     uint8_t block_y_inv = 1 - block_y;
-    uint8_t block_x_inv = blocks_x_per_panel - block_x - 1; // 4 - 1 2 3,,  3 2 1 0
+    uint8_t block_x_inv = blocks_x_per_panel - block_x - 1;
     uint8_t block_linear_index;
     if (_scan_pattern==WZAGZIG2) {
       block_linear_index = (3 - ((block_x_inv + 2) % 4)) * 2 + block_y;
