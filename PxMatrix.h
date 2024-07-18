@@ -116,7 +116,7 @@ BSD license, check license.txt for more information
 // SHIFTREG_SPI_SE: Like SHIFTREG, but you connect A and C on Panel to its Clock and Data output (and ground B). This will not work with fast_update enabled!
 enum mux_patterns {BINARY, STRAIGHT, SHIFTREG_ABC, SHIFTREG_SPI_SE, SHIFTREG_ABC_BIN_DE};
 
-// Specifies what blocking pattern the panel is using 
+// Specifies what blocking pattern the panel is using
 // |AB|,|DB|
 // |CD|,|CA|
 // |AB|,|DB|
@@ -658,7 +658,7 @@ inline void PxMATRIX::setColorOffset(uint8_t r, uint8_t g,uint8_t b)
 
 inline void PxMATRIX::fillMatrixBuffer(int16_t x, int16_t y, uint8_t r, uint8_t g, uint8_t b,bool selected_buffer)
 {
- 
+
 
   if (r>_color_R_offset)
     r-=_color_R_offset;
@@ -666,24 +666,24 @@ inline void PxMATRIX::fillMatrixBuffer(int16_t x, int16_t y, uint8_t r, uint8_t 
     r=0;
   if (g>_color_G_offset)
     g-=_color_G_offset;
-  else  
+  else
     g=0;
   if (b>_color_B_offset)
     b-=_color_B_offset;
-  else  
+  else
     b=0;
-   
+
   if (_block_pattern==DBCA)
   {
-    
-    
+
+
       // Every matrix is segmented in 8 blocks - 2 in X, 4 in Y direction
       // |AB|
       // |CD|
       // |AB|
       // |CD|
       // Have to rewrite this block suff and move to the scan pattern section - this will only work for chaining up to 2 panels
-      
+
       if (_panels_width>1) // Only works for two panels
       {
         if ((x>=_width/4) && (x<_width/2))
@@ -710,10 +710,10 @@ inline void PxMATRIX::fillMatrixBuffer(int16_t x, int16_t y, uint8_t r, uint8_t 
         {
           x-=_width/2/_panels_width;
           y-=_height/4;
-         
-        } 
+
+        }
       }
-     
+
   }
 
     if (_rotate){
@@ -725,10 +725,10 @@ inline void PxMATRIX::fillMatrixBuffer(int16_t x, int16_t y, uint8_t r, uint8_t 
   // Panels are naturally flipped
   if (!_flip)
     x =_width - 1 -x;
-  
+
   if ((x < 0) || (x >= _width) || (y < 0) || (y >= _height))
-    return; 
-  
+    return;
+
   if (_color_order!= RRGGBB)
   {
     uint8_t r_temp=r;
@@ -746,7 +746,7 @@ inline void PxMATRIX::fillMatrixBuffer(int16_t x, int16_t y, uint8_t r, uint8_t 
       case (BBGGRR): r=b_temp; g=g_temp; b=r_temp; break;
     }
   }
-  
+
   uint32_t base_offset;
   uint32_t total_offset_r=0;
   uint32_t total_offset_g=0;
@@ -834,11 +834,11 @@ inline void PxMATRIX::fillMatrixBuffer(int16_t x, int16_t y, uint8_t r, uint8_t 
 
   uint8_t bit_select = x%8;
 
-  
+
   // Normally the bytes in one buffer would be sequencial, e.g.
   // 0-1-2-3-
   // 0-1-2-3-
-  // hence the upper and lower row start with [OL|OH]. 
+  // hence the upper and lower row start with [OL|OH].
   //
   // However some panels have a byte wise row-changing scanning pattern and/or a bit changing pattern that we have to take case of
   // For example  [1L|1H] [3L|3H] for ZIGZAG or [0L|0H] [2L|2H] for ZAGZIG
@@ -864,14 +864,14 @@ inline void PxMATRIX::fillMatrixBuffer(int16_t x, int16_t y, uint8_t r, uint8_t 
     if (_scan_pattern==ZAGZIG)
       total_offset_r--;
 
-    // Byte split pattern - like ZAGZIG but after every 4 bit (starts on upper part)     
+    // Byte split pattern - like ZAGZIG but after every 4 bit (starts on upper part)
     if (_scan_pattern == ZZIAGG )
     {
       if (bit_select>3)
-      
+
          bit_select +=4;
       else
-        total_offset_r--;   
+        total_offset_r--;
     }
 
     // Byte split pattern (lower part)
@@ -884,7 +884,7 @@ inline void PxMATRIX::fillMatrixBuffer(int16_t x, int16_t y, uint8_t r, uint8_t 
     if (_scan_pattern==ZIGZAG)
       total_offset_r--;
 
-       // Byte split pattern - like ZAGZIG but after every 4 bit (starts on upper part)  
+       // Byte split pattern - like ZAGZIG but after every 4 bit (starts on upper part)
     if (_scan_pattern == ZZIAGG )
     {
 
@@ -920,7 +920,7 @@ uint8_t *PxMATRIX_bufferp = PxMATRIX_buffer;
   r = r >> (8-PxMATRIX_COLOR_DEPTH);
   g = g >> (8-PxMATRIX_COLOR_DEPTH);
   b = b >> (8-PxMATRIX_COLOR_DEPTH);
-  
+
   //Color interlacing
   for (int this_color_bit=0; this_color_bit<PxMATRIX_COLOR_DEPTH; this_color_bit++)
   {
@@ -973,7 +973,7 @@ inline void PxMATRIX::begin()
 
 void PxMATRIX::begin(uint8_t row_pattern, uint8_t CLK, uint8_t MOSI, uint8_t MISO, uint8_t SS)
 {
-  
+
   _SPI_CLK = CLK;
   _SPI_MOSI = MOSI;
   _SPI_MISO = MISO;
@@ -1009,7 +1009,7 @@ void PxMATRIX::begin(uint8_t row_pattern) {
   _mux_pattern = BINARY;
   _color_order=RRGGBB;
 
-   
+
   _pattern_color_bytes=(_height/_row_pattern)*(_width/8);
   _row_sets_per_buffer = _rows_per_buffer/_row_pattern;
   _send_buffer_size=_pattern_color_bytes*3;
@@ -1226,7 +1226,7 @@ void PxMATRIX::latch(uint16_t show_time )
 void PxMATRIX::display(uint16_t show_time) {
   if (show_time == 0)
     show_time =1;
-  
+
   // How long do we keep the pixels on
   uint16_t latch_time = ((show_time*(1<<_display_color)*_brightness)/255/2);
 
@@ -1263,12 +1263,12 @@ uint8_t *PxMATRIX_bufferp = PxMATRIX_buffer;
           // This pre-buffers the data for the next row pattern of this _display_color
           SPI_TRANSFER(&PxMATRIX_bufferp[_display_color*_buffer_size+(i+1)*_send_buffer_size],_send_buffer_size);
         }
-        else 
-        { 
+        else
+        {
           // This pre-buffers the data for the first row pattern of the next _display_color
-          SPI_TRANSFER(&PxMATRIX_bufferp[((_display_color+1)%PxMATRIX_COLOR_DEPTH)*_buffer_size],_send_buffer_size); 
+          SPI_TRANSFER(&PxMATRIX_bufferp[((_display_color+1)%PxMATRIX_COLOR_DEPTH)*_buffer_size],_send_buffer_size);
         }
-       
+
         while ((micros()-start_time)<latch_time)
           delayMicroseconds(1);
         digitalWrite(_OE_PIN,HIGH);
@@ -1287,10 +1287,10 @@ uint8_t *PxMATRIX_bufferp = PxMATRIX_buffer;
 #else
   SPI_TRANSFER(&PxMATRIX_bufferp[_display_color*_buffer_size+i*_send_buffer_size],_send_buffer_size);
 #endif
-        latch(latch_time); 
+        latch(latch_time);
       }
     }
-    
+
     if (_driver_chip == FM6124 || _driver_chip == FM6126A) // _driver_chip == FM6124
     {
     #ifdef ESP32
